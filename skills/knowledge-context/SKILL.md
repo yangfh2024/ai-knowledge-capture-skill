@@ -1,7 +1,7 @@
 ---
 name: knowledge-context
 description: Use when an AI Agent starts a task that depends on a user's history, projects, preferences, decisions, methods, cases, or strategic insights stored in a Markdown Knowledge Base.
-compatibility: Markdown + Git repository; optional rg or thread tools.
+compatibility: Local Markdown directory; optional local Git, GitHub remote, rg, or thread tools.
 ---
 
 # Knowledge Context
@@ -17,12 +17,13 @@ User Task → Analyze Context → Retrieve Relevant Knowledge
 
 ## Retrieval order
 
-1. 发现 Knowledge Base 根目录并读取协议版本和 `system/config.yaml`；
-2. 读取 `README.md`、`profile.md`、`preferences.md`；
-3. 根据任务匹配项目和 `current-status.md`；
-4. 读取相关 `decision-log.md`；
-5. 读取相关方法、案例和洞察；
-6. 最后读取 Receipt 或 Inbox，了解最近变化和待补证。
+1. 读取安装级配置发现 Knowledge Base 根目录；未设置时输出 `Knowledge Base not configured` 并停止；
+2. 检查根目录可读、可写，再读取协议版本和 `system/config.yaml`；
+3. 读取 `README.md`、`profile.md`、`preferences.md`；
+4. 根据任务匹配项目和 `current-status.md`；
+5. 读取相关 `decision-log.md`；
+6. 读取相关方法、案例和洞察；
+7. 最后读取 Receipt 或 Inbox，了解最近变化和待补证。
 
 不要每次加载整个 Knowledge Base。检索范围必须与任务相关，并在输出中列出文件路径。
 

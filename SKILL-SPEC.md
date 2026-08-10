@@ -20,10 +20,14 @@
 
 ## Portable configuration
 
-评分、目录名和默认阈值不是 Agent 的隐式记忆，而是 Knowledge Base 的配置。Agent 先读取 `system/config.yaml`；缺失时使用本规范的默认值，并在 Receipt 中记录实际使用的规则版本。
+评分、目录名、知识库根目录和存储模式不是 Agent 的隐式记忆，而是配置。Agent 先读取安装级配置，再读取 Knowledge Base 的 `system/config.yaml`；缺失时使用本规范的默认值，并在 Receipt 中记录实际使用的规则版本。
 
 ```yaml
 protocol_version: "0.1"
+knowledge_base:
+  root: ""
+  require_read_access: true
+  require_write_access: true
 value_score:
   dimensions:
     - project_progress
@@ -36,6 +40,13 @@ value_score:
 write_policy:
   approval_required: true
   conflict_mode: propose_merge
+storage:
+  mode: local
+  local_git: false
+  github:
+    enabled: false
+    remote: ""
+    auto_push: false
 ```
 
 项目可以增加维度，但必须在配置中声明名称、分值范围和阈值；不能让不同 Agent 默默使用不同评分口径。
@@ -50,7 +61,13 @@ write_policy:
 
 批准前：只允许写入 Inbox 和审核队列。
 
-批准后：更新已有资产、重建索引、生成 Receipt 并提交 Git。
+批准后：更新已有资产、重建索引并生成 Receipt。若 `storage.local_git` 开启，再创建本地 Git commit；只有 `storage.github.enabled` 且用户明确授权时才 push。
+
+## Root directory contract
+
+- 根目录必须由用户设置，或通过 `/memory setup <path>` 指定；未设置时不得扫描整台机器、猜测目录或创建第二个知识库。
+- 设置时检查路径存在、可读取、可写入；任一检查失败都要报告具体路径和权限问题并停止。
+- 安装级配置保存根目录和存储模式；知识资产仍只写入根目录下的 Markdown 文件。
 
 ## Write and conflict contract
 
@@ -91,7 +108,7 @@ Context 必须区分“已确认资产”和“待审核提案”，并在回答
 
 ## Receipt contract
 
-每次成功晋升至少生成一份 Receipt，包含：receipt_id、时间、来源、提取主题、评分、审核结果、新增文件、更新文件、拒绝内容、Git commit、状态和证据缺口。
+每次成功晋升至少生成一份 Receipt，包含：receipt_id、时间、来源、提取主题、评分、审核结果、新增文件、更新文件、拒绝内容、存储模式、Git commit（未启用时写 `not configured`）、状态和证据缺口。
 
 ## Handoff contract
 

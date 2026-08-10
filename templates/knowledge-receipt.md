@@ -18,6 +18,7 @@
 - evidence_gaps:
   - 待补充日志、指标或用户确认
 - git_commit: `<sha>`
+- storage_mode: local | local_git | github_remote
 - base_commits:
   - `<sha>`
 - conflicts: none | proposed_merge | resolved

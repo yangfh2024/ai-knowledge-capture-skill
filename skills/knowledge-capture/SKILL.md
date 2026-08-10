@@ -1,7 +1,7 @@
 ---
 name: knowledge-capture
 description: Use when an AI conversation, project task, decision, case, method, or insight may become durable cross-agent knowledge. Trigger for requests to summarize conversations into a knowledge base, update project memory, create a receipt, or prepare an Inbox review batch.
-compatibility: Markdown + Git repository; optional thread-list/read tools.
+compatibility: Local Markdown directory; optional local Git, GitHub remote, and thread-list/read tools.
 ---
 
 # Knowledge Capture
@@ -55,7 +55,7 @@ Conversation → Extract → Evaluate → Classify → Inbox
 
 ### Commit
 
-提交前检查 Markdown 链接、敏感信息、`chat-*.md` 禁止项和 `git diff --check`。未经用户授权不 push；禁止强制推送。
+提交前检查 Markdown 链接、敏感信息、`chat-*.md` 禁止项和 `git diff --check`。默认只写本地文件；只有启用本地 Git 时才 commit，只有用户明确启用 GitHub 并授权时才 push；禁止强制推送。
 
 ## Safety rules
 
@@ -66,4 +66,4 @@ Conversation → Extract → Evaluate → Classify → Inbox
 
 ## Capture output
 
-交付时输出：候选摘要、评分、建议落点、证据边界、人工审核状态、Receipt 路径和 Git 状态。没有用户批准时明确写“正式资产未修改”。
+交付时输出：候选摘要、评分、建议落点、证据边界、人工审核状态、Receipt 路径、根目录和存储状态。没有用户批准时明确写“正式资产未修改”。

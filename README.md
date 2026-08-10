@@ -2,7 +2,7 @@
 
 切换 AI Agent，不必重新解释你的项目。
 
-把经过确认的项目决策、方法和经验保存为 Markdown + Git，让 ChatGPT、Claude、Cursor 以及其他 Agent 共享同一份长期知识。
+把经过确认的项目决策、方法和经验保存为本地 Markdown，让 ChatGPT、Claude、Cursor 以及其他 Agent 共享同一份长期知识。Git 和 GitHub 都是可选增强，不是运行前置条件。
 
 Personal Knowledge Layer for AI Agents.
 
@@ -58,6 +58,7 @@ User Task → Analyze Context → Retrieve Relevant Knowledge
 ## 设计原则
 
 - Knowledge assets are Markdown; Git is the history.
+- 默认只使用本地文件；本地 Git 可选，GitHub 远程默认关闭。
 - 对话是输入源，不是最终数据结构。
 - 先进入 Inbox，人工确认后才更新正式资产。
 - 优先更新已有文件，不按聊天创建文件。
@@ -76,7 +77,7 @@ User Task → Analyze Context → Retrieve Relevant Knowledge
 5. Knowledge Receipt；
 6. ChatGPT → Claude → Cursor → Grok Demo。
 
-第一版不包含向量数据库、云服务、后台系统或 SaaS 平台。
+第一版不包含向量数据库、云服务、后台系统或 SaaS 平台；GitHub 同步属于高级可选功能。
 
 ## 5 分钟 Demo
 
@@ -96,6 +97,7 @@ Cursor：Context Loaded；已知路由必须保持拆分，不需要重新解释
 - [Skill 协议](SKILL-SPEC.md)
 - [目录设计](DIRECTORY-DESIGN.md)
 - [使用流程](USAGE.md)
+- [安装与快速设置](SETUP.md)
 - [跨 Agent Demo](DEMO.md)
 - [MVP 计划](MVP-PLAN.md)
 - [Knowledge Capture Skill](skills/knowledge-capture/SKILL.md)
@@ -105,7 +107,7 @@ Cursor：Context Loaded；已知路由必须保持拆分，不需要重新解释
 
 ## 当前实现状态
 
-这是一个 Markdown/Git 协议原型，已经在“追风宇宙”知识库中验证了 Inbox、人工晋升、索引和 Receipt 的工作方式。它还没有实现平台级自动同步；任何 Agent 都可以按协议读取和写入同一个 Knowledge Base。
+这是一个本地 Markdown 协议原型，已经在“追风宇宙”知识库中验证了 Inbox、人工晋升、索引和 Receipt 的工作方式。本地 Git 和 GitHub 同步都是可选层；任何 Agent 都可以按协议读取和写入同一个 Knowledge Base。
 
 ## Agent 安装入口
 

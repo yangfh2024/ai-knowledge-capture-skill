@@ -33,7 +33,9 @@ Context 只加载与当前任务相关的最小知识集合：用户背景、偏
 - 知识资产：Markdown；
 - 审核记录：Markdown；
 - Receipt：Markdown；
-- 版本追踪：Git；
+- 默认存储：本地 Markdown；
+- 可选版本追踪：本地 Git；
+- 可选远程同步：GitHub（默认关闭）；
 - 可选运行配置：`system/config.yaml`，只保存路径、开关和协议版本，不保存知识内容。
 
 ## Agent 适配层

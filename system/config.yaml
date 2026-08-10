@@ -1,5 +1,10 @@
 protocol_version: "0.1"
 
+knowledge_base:
+  root: ""
+  require_read_access: true
+  require_write_access: true
+
 value_score:
   dimensions:
     - project_progress
@@ -14,6 +19,14 @@ write_policy:
   approval_required: true
   conflict_mode: propose_merge
   per_chat_files: false
+
+storage:
+  mode: local
+  local_git: false
+  github:
+    enabled: false
+    remote: ""
+    auto_push: false
 
 paths:
   inbox: inbox/

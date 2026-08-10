@@ -1,5 +1,25 @@
 # Usage
 
+## 首次设置
+
+默认使用本地知识库，不要求 GitHub 账号或远程仓库。首次运行先设置根目录：
+
+```text
+/memory setup D:\AI\追风宇宙
+```
+
+设置动作必须检查目录存在、可读取、可写入，并返回：
+
+```text
+Knowledge Base Configured
+- root: D:\AI\追风宇宙
+- read: passed
+- write: passed
+- storage: local
+```
+
+以后需要换目录时重复执行同一命令。未设置根目录时，Agent 不扫描磁盘、不猜测路径、不创建第二个知识库。
+
 ## 方式 1：自动加载
 
 Agent 启动新任务时读取：
@@ -36,6 +56,16 @@ Capture：提取 DEC、评分、建议更新 projects/shopmemo/decision-log.md�
 用户：批准。
 Capture：更新决策和知识卡，生成 Receipt，提交 Git。
 ```
+
+## 存储模式
+
+| 模式 | 默认 | 说明 |
+|---|---:|---|
+| Local | 是 | 只读写本地 Markdown，不需要 GitHub |
+| Local Git | 否 | 在本地 commit，适合需要版本回滚的用户 |
+| GitHub Remote | 否 | 高级设置；用户提供远程仓库并明确授权后才 push |
+
+GitHub 不是知识捕获的前置条件。Receipt 在未启用 Git 时将 Git 状态记录为 `not configured`。
 
 ## 换 Agent 的交接
 
