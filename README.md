@@ -6,6 +6,60 @@
 
 Personal Knowledge Layer for AI Agents.
 
+## 先看这里：安装
+
+如果你想让 Agent 帮你安装，直接把下面这段和本仓库地址一起发给它：
+
+```text
+请从 https://github.com/yangfh2024/ai-knowledge-capture-skill 安装这个 Agent Skill。
+
+要求：
+1. 先识别你当前 Agent 的原生 Skill 安装方式和目录；
+2. 只安装 skills/knowledge-capture/ 和 skills/knowledge-context/ 两个 Skill；
+3. 不要把 examples/、templates/ 或整个知识库复制成用户数据；
+4. 不要创建 GitHub 仓库、登录 GitHub 或自动 push；
+5. 安装完成后报告实际安装路径，并提示我执行：
+   /memory setup <我的知识库目录>
+```
+
+然后设置知识库根目录：
+
+```text
+/memory setup D:\AI\追风宇宙
+```
+
+没有设置根目录时，Skill 必须停止并提示设置，不能扫描磁盘或猜测路径。
+
+## Skill 项目层级
+
+```text
+ai-knowledge-capture-skill/
+├── skills/                         # 可安装的 Skill 包
+│   ├── knowledge-capture/SKILL.md  # 对话 → Inbox → 知识资产
+│   └── knowledge-context/SKILL.md  # 任务 → 相关上下文
+├── templates/                      # 知识提案和 Receipt 模板
+├── examples/                       # 示例知识库，不是用户数据
+├── system/                         # 协议配置示例
+├── README.md                       # 项目说明和安装入口
+└── LICENSE
+```
+
+真正安装的是 `skills/*/SKILL.md`；知识库根目录是另一件事，应该由用户单独设置。
+
+## 通用标准与 Agent 差异
+
+本项目遵循 [Agent Skills 开放规范](https://agentskills.io/specification)：Skill 是一个目录，至少包含 `SKILL.md`，文件包含 `name`、`description` 等 YAML frontmatter 和 Markdown 指令。
+
+统一的是 Skill 包格式，不统一的是安装位置：
+
+| Agent / 方式 | 安装策略 |
+|---|---|
+| Claude Code | 个人 Skill 通常放 `~/.claude/skills/<name>/SKILL.md`，项目 Skill 放 `.claude/skills/<name>/SKILL.md` |
+| Codex / Codex App | 使用当前版本的本地 Skill 目录或 Skill 管理入口；本项目不硬编码其他机器的路径 |
+| 其他 Agent | 使用其原生 Skill、插件或规则目录；若不支持 Skill，至少让 Agent 直接读取两个 `SKILL.md` |
+
+因此，本项目把“从 GitHub 地址安装”定义为一个适配流程，而不是假设存在一个跨 Agent 的统一复制目录：发现仓库 → 找到 `skills/*/SKILL.md` → 安装到当前 Agent 的原生位置 → 报告路径 → 设置知识库根目录。
+
 ## Before / After
 
 没有共享知识层时：
