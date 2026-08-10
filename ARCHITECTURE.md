@@ -36,6 +36,20 @@ Context 只加载与当前任务相关的最小知识集合：用户背景、偏
 - 版本追踪：Git；
 - 可选运行配置：`system/config.yaml`，只保存路径、开关和协议版本，不保存知识内容。
 
+## Agent 适配层
+
+每个 Agent 只需实现三个与平台无关的动作：
+
+- `discover(root)`：发现知识库根目录和协议版本；
+- `load(task, root)`：返回最小相关上下文和 `source_commit`；
+- `capture(conversation, root)`：生成 Inbox 提案，等待用户批准。
+
+适配层不保存登录态、Cookie 或聊天全文，也不要求引入数据库。
+
+## 并发写入
+
+提案记录目标文件的 `base_commit`。如果目标文件在此版本之后发生变化，晋升流程停止并生成合并提案；系统不静默覆盖其他 Agent 的修改。冲突由 Git 或顺序提交解决，不引入锁服务。
+
 ## 写入状态机
 
 ```text

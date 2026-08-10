@@ -21,7 +21,7 @@ Conversation → Extract → Evaluate → Classify → Inbox
 
 ### Evaluate
 
-每个候选按 5 个维度评分，每项 0–2，总分 10：
+读取 `system/config.yaml` 的评分配置；若配置缺失，使用 5 个维度、每项 0–2、总分 10：
 
 1. 推进项目；
 2. 形成决策；
@@ -29,7 +29,7 @@ Conversation → Extract → Evaluate → Classify → Inbox
 4. 有真实案例或证据；
 5. 形成长期资产。
 
-默认总分低于 6 忽略。达到阈值也只能进入 Inbox。
+按配置中的 `ignore_below` 忽略低价值候选。达到阈值也只能进入 Inbox，并在提案中记录规则版本和实际分数。
 
 ### Classify
 
@@ -44,6 +44,8 @@ Conversation → Extract → Evaluate → Classify → Inbox
 ### Promote
 
 批准后按职责更新资产：状态进 `current-status.md`，选择进 `decision-log.md`，可复用原则进 `knowledge-card.md` 或 `methods/`，案例进 `cases/`，观察和假设进 `insights/`。
+
+写入前记录目标文件的当前 Git commit 作为 `base_commit`。若文件已在该 commit 之后变化，停止晋升并生成冲突提案；不得静默覆盖或丢弃其他 Agent 的修改。
 
 事实、决策、假设和证据缺口分开写。找不到仓库、日志、截图、指标或用户确认时，使用“待补证”，不要写“成功”“已完成”“用户喜欢”。
 

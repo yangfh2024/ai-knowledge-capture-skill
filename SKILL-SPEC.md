@@ -18,17 +18,57 @@
 | Inbox | 尚未人工确认的提案 | `inbox/` |
 | Receipt | 保存反馈和 Git 结果 | `receipts/` |
 
+## Portable configuration
+
+评分、目录名和默认阈值不是 Agent 的隐式记忆，而是 Knowledge Base 的配置。Agent 先读取 `system/config.yaml`；缺失时使用本规范的默认值，并在 Receipt 中记录实际使用的规则版本。
+
+```yaml
+protocol_version: "0.1"
+value_score:
+  dimensions:
+    - project_progress
+    - decision_formed
+    - reusable_method
+    - evidence_or_case
+    - long_term_asset
+  scale: 0-2
+  ignore_below: 6
+write_policy:
+  approval_required: true
+  conflict_mode: propose_merge
+```
+
+项目可以增加维度，但必须在配置中声明名称、分值范围和阈值；不能让不同 Agent 默默使用不同评分口径。
+
 ## Capture contract
 
 输入：当前对话、用户提供文件、项目日志或 Agent 任务摘要。
 
 输出：一个或多个结构化提案，每个提案必须有来源、评分、分类、建议落点、提炼内容和证据边界。
 
-阈值：五维价值评分每项 0–2，总分 10；默认总分低于 6 忽略或拒绝。项目可扩展到六维，但必须在 `system/rules.md` 声明。
+阈值：按 `system/config.yaml` 的价值评分配置执行。默认五维、每项 0–2、总分 10，低于 6 忽略或拒绝；达到阈值也只能进入 Inbox。
 
 批准前：只允许写入 Inbox 和审核队列。
 
 批准后：更新已有资产、重建索引、生成 Receipt 并提交 Git。
+
+## Write and conflict contract
+
+- Agent 写入前必须读取目标文件的当前 Git 版本，并在提案中列出 `base_commit`、目标文件和预期变更。
+- 未经批准只能写 Inbox 和审核队列；不能直接覆盖正式资产。
+- 若目标文件在 `base_commit` 之后发生变化，Agent 必须停止晋升，生成冲突提案，保留双方内容，不得静默覆盖。
+- 同一事实、决策或方法只能保留一个正式落点；重复内容应合并或拒绝，并在 Receipt 记录原因。
+- 多 Agent 并行工作时，以 Git 分支或顺序提交协调；本协议不要求锁服务。
+
+## Agent adapter contract
+
+不同 Agent 只需要实现三个动作，不需要共享平台数据库：
+
+1. `discover(root)`：找到 Knowledge Base 根目录和协议版本；找不到时明确失败。
+2. `load(task, root)`：按 `knowledge-context` 返回相关路径、已确认内容、待审核内容和 `source_commit`。
+3. `capture(conversation, root)`：按 `knowledge-capture` 生成 Inbox 提案；只有用户批准后才更新正式资产。
+
+适配器必须把 Knowledge Base 路径、读取文件和写入文件作为可审计输入输出，不得把平台登录态、Cookie 或聊天全文写入资产。
 
 ## Context contract
 

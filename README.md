@@ -1,8 +1,10 @@
 # AI Knowledge Capture Skill
 
-Personal Knowledge Layer for AI Agents.
+切换 AI Agent，不必重新解释你的项目。
 
-AI 对话越来越多，但用户的项目、决策、方法和经验仍然被锁在单个 Agent 的上下文里。本项目定义一套开放、可迁移的知识资产协议，让 ChatGPT、Claude、Cursor、Grok、Gemini、OpenClaw 等 Agent 共享同一个人的长期认知。
+把经过确认的项目决策、方法和经验保存为 Markdown + Git，让 ChatGPT、Claude、Cursor 以及其他 Agent 共享同一份长期知识。
+
+Personal Knowledge Layer for AI Agents.
 
 ## Before / After
 
@@ -22,7 +24,7 @@ AI 对话越来越多，但用户的项目、决策、方法和经验仍然被�
 
 ## 核心定位
 
-这不是聊天备份，也不是 Another AI Memory Database。
+这不是聊天备份，也不是 Another AI Memory Database。它是一套跨 Agent 的个人知识资产协议。
 
 它解决的是：
 
@@ -76,6 +78,18 @@ User Task → Analyze Context → Retrieve Relevant Knowledge
 
 第一版不包含向量数据库、云服务、后台系统或 SaaS 平台。
 
+## 5 分钟 Demo
+
+```text
+ChatGPT：我们决定把 ShopMemo 的结果页和风格学习页拆开。
+Capture：写入 inbox/REV-20260810-001.md，等待确认。
+用户：Approve。
+Receipt：更新 projects/shopmemo/decision-log.md，提交 Git commit abc123。
+Cursor：Context Loaded；已知路由必须保持拆分，不需要重新解释原因。
+```
+
+完整过程见 [跨 Agent Demo](DEMO.md)。
+
 ## 文档导航
 
 - [技术架构](ARCHITECTURE.md)
@@ -86,6 +100,7 @@ User Task → Analyze Context → Retrieve Relevant Knowledge
 - [MVP 计划](MVP-PLAN.md)
 - [Knowledge Capture Skill](skills/knowledge-capture/SKILL.md)
 - [Knowledge Context Skill](skills/knowledge-context/SKILL.md)
+- [协议配置示例](system/config.yaml)
 - [Knowledge Receipt 模板](templates/knowledge-receipt.md)
 
 ## 当前实现状态
@@ -98,4 +113,4 @@ User Task → Analyze Context → Retrieve Relevant Knowledge
 
 ## License
 
-建议使用 MIT License。正式开源仓库创建和发布前，应补充 LICENSE、贡献指南和版本号。
+本项目采用 MIT License，见 [LICENSE](LICENSE)。

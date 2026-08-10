@@ -1,0 +1,21 @@
+protocol_version: "0.1"
+
+value_score:
+  dimensions:
+    - project_progress
+    - decision_formed
+    - reusable_method
+    - evidence_or_case
+    - long_term_asset
+  scale: 0-2
+  ignore_below: 6
+
+write_policy:
+  approval_required: true
+  conflict_mode: propose_merge
+  per_chat_files: false
+
+paths:
+  inbox: inbox/
+  receipts: receipts/
+  review_queue: system/review-queue.md

@@ -2,6 +2,29 @@
 
 目标：同一个用户连续使用四个 Agent，最终共享一份 Knowledge Base。
 
+## 30 秒 Hero Demo
+
+问题不是“Agent 能不能记住聊天”，而是“换一个 Agent 后，能不能接着做事”。
+
+```text
+1. ChatGPT
+   “ShopMemo 的结果页和风格学习页应该拆开。”
+
+2. Knowledge Capture
+   生成 inbox/REV-20260810-001.md
+   状态：pending approval
+
+3. 用户确认
+   Receipt：更新 projects/shopmemo/decision-log.md
+   Git commit：abc123
+
+4. Cursor
+   Context Loaded
+   已知：路由必须保持拆分；来源：decision-log.md；无需重新解释背景。
+```
+
+同一份 Markdown 知识资产从一个 Agent 流向另一个 Agent；聊天记录本身没有被当作长期记忆保存。
+
 ## 1. ChatGPT：产品讨论
 
 用户讨论 ShopMemo 的结果页和风格学习页。Knowledge Capture 提取一个产品决策，写入 Inbox，不直接改正式文件。

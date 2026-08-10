@@ -17,11 +17,12 @@ User Task → Analyze Context → Retrieve Relevant Knowledge
 
 ## Retrieval order
 
-1. 读取 `README.md`、`profile.md`、`preferences.md`；
-2. 根据任务匹配项目和 `current-status.md`；
-3. 读取相关 `decision-log.md`；
-4. 读取相关方法、案例和洞察；
-5. 最后读取 Receipt 或 Inbox，了解最近变化和待补证。
+1. 发现 Knowledge Base 根目录并读取协议版本和 `system/config.yaml`；
+2. 读取 `README.md`、`profile.md`、`preferences.md`；
+3. 根据任务匹配项目和 `current-status.md`；
+4. 读取相关 `decision-log.md`；
+5. 读取相关方法、案例和洞察；
+6. 最后读取 Receipt 或 Inbox，了解最近变化和待补证。
 
 不要每次加载整个 Knowledge Base。检索范围必须与任务相关，并在输出中列出文件路径。
 
@@ -56,6 +57,10 @@ Context Loaded
 ## Handoff
 
 接手其他 Agent 的工作时先读 `system/sync-state.md`、最近 Receipt 和 `git log`，输出 `last_batch`、`last_commit`、`pending_evidence` 和 `next_action`。不要重新创建已有项目或聊天文件。
+
+## Adapter behavior
+
+如果无法发现 Knowledge Base 根目录，直接报告失败并请求路径；不要创建新的默认知识库。注入上下文时只返回与任务相关的最小文件集合，并公开 `source_commit`。
 
 ## Safety
 
