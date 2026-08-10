@@ -1,0 +1,20 @@
+{
+  "project": "ai-knowledge-capture-skill",
+  "evals": [
+    {
+      "id": 1,
+      "name": "capture-to-inbox",
+      "prompt": "总结一段产品讨论，但先生成 Inbox 提案，不要直接改正式项目文件，并说明评分和证据边界。"
+    },
+    {
+      "id": 2,
+      "name": "context-handoff",
+      "prompt": "新 Agent 接手一个项目任务。加载最小相关知识，输出 Context Loaded，并列出待补证内容。"
+    },
+    {
+      "id": 3,
+      "name": "receipt-after-approval",
+      "prompt": "用户批准一个提案。更新正式资产，生成 Knowledge Receipt，并返回 Git 提交和文件变化。"
+    }
+  ]
+}
