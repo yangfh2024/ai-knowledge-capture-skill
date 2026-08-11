@@ -4,6 +4,8 @@
 
 当前协议版本：`0.1`。
 
+T1 增量规范：`0.2-draft`。它增加机器可验证的 Memory Item、Memory Gate 和 Recall Benchmark 字段，但不要求旧 Agent 立即升级协议版本。
+
 ## Knowledge asset types
 
 | 类型 | 目的 | 默认文件 |
@@ -17,6 +19,25 @@
 | Insight | 观察、判断、证据和下一步验证 | `insights/` |
 | Inbox | 尚未人工确认的提案 | `inbox/` |
 | Receipt | 保存反馈和 Git 结果 | `receipts/` |
+
+## T1 Memory Item frontmatter
+
+每个关键正式资产或 Inbox 候选都应能归一化为 Memory Item。Markdown 正文仍是事实源，frontmatter 负责稳定 ID、检索过滤和生命周期判断。
+
+必填字段：
+
+`id`、`type`、`title`、`created_at`、`updated_at`、`source`、`project`、`tags`、`importance`、`confidence`、`status`、`scope`、`supersedes`、`superseded_by`。
+
+约束：
+
+- `importance` 为 `0–10` 整数；`confidence` 为 `0–1` 数字；
+- `scope: inbox` 时 `status` 必须为 `pending`；
+- `scope: formal` 时不得为 `pending`；
+- `status: superseded` 必须有 `superseded_by`，且 scope 必须为 formal；
+- `status: active` 的 `superseded_by` 必须为 null；
+- `id` 在知识库内稳定且不可复用。
+
+机器 schema 位于：`system/schemas/memory-item.schema.json`。
 
 ## Portable configuration
 
@@ -60,6 +81,18 @@ storage:
 阈值：按 `system/config.yaml` 的价值评分配置执行。默认五维、每项 0–2、总分 10，低于 6 忽略或拒绝；达到阈值也只能进入 Inbox。
 
 批准前：只允许写入 Inbox 和审核队列。
+
+### Memory Gate contract
+
+评分达到阈值后必须先经过 Gate，动作只能是：
+
+- `CREATE`：没有相同主题，创建新候选；
+- `UPDATE`：已有 State、Preference 或 Knowledge 发生变化，更新原条目；
+- `MERGE`：多个条目表达同一知识，合并后保留一个正式落点；
+- `IGNORE`：闲聊、临时上下文、重复或短期过期内容，不写正式资产；
+- `SUPERSEDE`：新决策明确替代旧决策，旧条目标记 superseded。
+
+提案必须记录 `action`、`target.existing_ids`、`target.path`、`gate_reason`、`evidence`、`base_commit` 和 `approval_status`。机器 schema 位于：`system/schemas/memory-proposal.schema.json`。每个动作至少一个可执行样例位于：`evals/memory-gate-fixtures.json`。
 
 批准后：更新已有资产、重建索引并生成 Receipt。若 `storage.local_git` 开启，再创建本地 Git commit；只有 `storage.github.enabled` 且用户明确授权时才 push。
 
@@ -105,6 +138,16 @@ Context Loaded
 ```
 
 Context 必须区分“已确认资产”和“待审核提案”，并在回答中避免把后者当作事实。
+
+### Recall quality contract
+
+Recall Benchmark 同时计算三项指标：
+
+- `Recall hit`：是否返回全部 required memory IDs；
+- `Wrong recall`：是否返回不在 allowed IDs 中的记忆；目标为 0；
+- `Context pollution`：是否注入 forbidden、superseded 或 pending 记忆；目标为 0。
+
+第三项是硬约束：即使某条记忆关键词相关性较高，只要它属于明确禁止的项目或生命周期状态，也算污染。五个固定 fixture 位于：`evals/recall-benchmark.json`，机器 schema 位于：`system/schemas/recall-benchmark.schema.json`。
 
 ## Receipt contract
 

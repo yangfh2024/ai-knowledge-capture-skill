@@ -1,0 +1,174 @@
+{
+  "schema_version": "0.2",
+  "description": "One machine-checkable fixture for each Memory Gate action.",
+  "tests": [
+    {
+      "id": "GATE-CREATE-001",
+      "action": "CREATE",
+      "proposal_id": "PROP-20260811-CREATE",
+      "candidate": {
+        "type": "preference",
+        "title": "默认先给结论再给解释",
+        "content": "用户希望回答先给结论，再给必要解释。",
+        "source": "fixture:conversation:create",
+        "project": null,
+        "tags": [
+          "fixture"
+        ],
+        "importance": 7,
+        "confidence": 0.9,
+        "status": "pending"
+      },
+      "target": {
+        "path": "preferences.md",
+        "existing_ids": [],
+        "superseded_by": null
+      },
+      "gate_reason": "长期复用且没有相同偏好记录。",
+      "evidence": "verified",
+      "base_commit": null,
+      "approval_status": "pending",
+      "expected": {
+        "action": "CREATE",
+        "formal_target": "preferences.md"
+      }
+    },
+    {
+      "id": "GATE-UPDATE-001",
+      "action": "UPDATE",
+      "proposal_id": "PROP-20260811-UPDATE",
+      "candidate": {
+        "type": "state",
+        "title": "ShopMemo 当前阶段更新",
+        "content": "核心功能完成，进入真实用户冷启动验证。",
+        "source": "fixture:conversation:update",
+        "project": "shopmemo",
+        "tags": [
+          "fixture"
+        ],
+        "importance": 8,
+        "confidence": 0.8,
+        "status": "pending"
+      },
+      "target": {
+        "path": "projects/shopmemo/current-status.md",
+        "existing_ids": [
+          "STATE-SHOPMEMO-001"
+        ],
+        "superseded_by": null
+      },
+      "gate_reason": "已有 State 的当前阶段发生变化，应更新快照而非追加重复状态。",
+      "evidence": "verified",
+      "base_commit": "abc1234",
+      "approval_status": "pending",
+      "expected": {
+        "action": "UPDATE",
+        "target_ids": [
+          "STATE-SHOPMEMO-001"
+        ]
+      }
+    },
+    {
+      "id": "GATE-MERGE-001",
+      "action": "MERGE",
+      "proposal_id": "PROP-20260811-MERGE",
+      "candidate": {
+        "type": "knowledge",
+        "title": "机会研究的四步判断",
+        "content": "真实流量 → 趋势 → 竞争 → 是否进入。",
+        "source": "fixture:conversation:merge",
+        "project": "saas-research",
+        "tags": [
+          "fixture"
+        ],
+        "importance": 7,
+        "confidence": 0.75,
+        "status": "pending"
+      },
+      "target": {
+        "path": "methods/opportunity-research.md",
+        "existing_ids": [
+          "METHOD-OPPORTUNITY-001",
+          "METHOD-OPPORTUNITY-002"
+        ],
+        "superseded_by": null
+      },
+      "gate_reason": "两条既有方法表达同一判断顺序，应合并为一个方法条目。",
+      "evidence": "uncertain",
+      "base_commit": "def5678",
+      "approval_status": "pending",
+      "expected": {
+        "action": "MERGE",
+        "target_ids": [
+          "METHOD-OPPORTUNITY-001",
+          "METHOD-OPPORTUNITY-002"
+        ]
+      }
+    },
+    {
+      "id": "GATE-IGNORE-001",
+      "action": "IGNORE",
+      "proposal_id": "PROP-20260811-IGNORE",
+      "candidate": {
+        "type": "knowledge",
+        "title": "问候",
+        "content": "在吗。",
+        "source": "fixture:conversation:ignore",
+        "project": null,
+        "tags": [
+          "fixture"
+        ],
+        "importance": 0,
+        "confidence": 1,
+        "status": "pending"
+      },
+      "target": {
+        "path": null,
+        "existing_ids": [],
+        "superseded_by": null
+      },
+      "gate_reason": "没有结论、复用价值或未来行动。",
+      "evidence": "not_applicable",
+      "base_commit": null,
+      "approval_status": "pending",
+      "expected": {
+        "action": "IGNORE"
+      }
+    },
+    {
+      "id": "GATE-SUPERSEDE-001",
+      "action": "SUPERSEDE",
+      "proposal_id": "PROP-20260811-SUPERSEDE",
+      "candidate": {
+        "type": "decision",
+        "title": "ShopMemo 优先中文市场",
+        "content": "基于当前资源与验证条件，下一阶段改为中文市场优先。",
+        "source": "fixture:conversation:supersede",
+        "project": "shopmemo",
+        "tags": [
+          "fixture"
+        ],
+        "importance": 9,
+        "confidence": 0.85,
+        "status": "pending"
+      },
+      "target": {
+        "path": "projects/shopmemo/decision-log.md",
+        "existing_ids": [
+          "DEC-SHOPMEMO-ENGLISH-001"
+        ],
+        "superseded_by": null
+      },
+      "gate_reason": "新决策明确替代旧的英文市场优先决策，旧条目必须保留并标记 superseded。",
+      "evidence": "verified",
+      "base_commit": "fedcba9",
+      "approval_status": "pending",
+      "expected": {
+        "action": "SUPERSEDE",
+        "target_ids": [
+          "DEC-SHOPMEMO-ENGLISH-001"
+        ]
+      }
+    }
+  ]
+}

@@ -193,6 +193,9 @@ Cursor：Context Loaded；已知路由必须保持拆分，不需要重新解释
 - [Knowledge Capture Skill](skills/knowledge-capture/SKILL.md)
 - [Knowledge Context Skill](skills/knowledge-context/SKILL.md)
 - [协议配置示例](system/config.yaml)
+- [Memory Item Schema](system/schemas/memory-item.schema.json)
+- [Memory Gate Schema](system/schemas/memory-proposal.schema.json)
+- [Recall Benchmark](evals/recall-benchmark.json)
 - [Knowledge Receipt 模板](templates/knowledge-receipt.md)
 
 ## 当前实现状态

@@ -1,0 +1,329 @@
+{
+  "benchmark_version": "0.2",
+  "metrics": {
+    "recall_hit": {
+      "definition": "clean_result 必须返回 expected_relevant_ids 的全部 ID。",
+      "target": "all_required_ids_returned"
+    },
+    "wrong_recall": {
+      "definition": "returned_ids 中不属于 allowed_ids 的数量必须为 0。",
+      "target": "zero_disallowed_ids"
+    },
+    "context_pollution": {
+      "definition": "injected_ids 不得包含 forbidden_ids、superseded 或 pending 记忆。",
+      "target": "zero_forbidden_or_inactive_injected"
+    }
+  },
+  "memory_catalog": [
+    {
+      "id": "PROJ-OPEN-MEMORY-001",
+      "type": "project",
+      "project": "open-memory",
+      "status": "active",
+      "title": "跨 Agent Memory Skill"
+    },
+    {
+      "id": "DEC-OPEN-MEMORY-MARKDOWN-001",
+      "type": "decision",
+      "project": "open-memory",
+      "status": "active",
+      "title": "Markdown 作为事实源"
+    },
+    {
+      "id": "STATE-OPEN-MEMORY-RECALL-001",
+      "type": "state",
+      "project": "open-memory",
+      "status": "active",
+      "title": "下一步验证跨 Agent Recall"
+    },
+    {
+      "id": "DEC-SHOPMEMO-BRAND-001",
+      "type": "decision",
+      "project": "shopmemo",
+      "status": "active",
+      "title": "一个 Project 对应一个品牌"
+    },
+    {
+      "id": "STATE-SHOPMEMO-DRAFT-001",
+      "type": "state",
+      "project": "shopmemo",
+      "status": "superseded",
+      "title": "ShopMemo 正在开发"
+    },
+    {
+      "id": "STATE-SHOPMEMO-LAUNCH-001",
+      "type": "state",
+      "project": "shopmemo",
+      "status": "active",
+      "title": "ShopMemo 已完成核心功能并进入冷启动"
+    },
+    {
+      "id": "DEC-SHOPMEMO-ENGLISH-001",
+      "type": "decision",
+      "project": "shopmemo",
+      "status": "superseded",
+      "title": "优先做英文市场"
+    },
+    {
+      "id": "DEC-SHOPMEMO-CHINESE-001",
+      "type": "decision",
+      "project": "shopmemo",
+      "status": "active",
+      "title": "改为中文市场优先"
+    },
+    {
+      "id": "PROJ-TEMU-001",
+      "type": "project",
+      "project": "temu",
+      "status": "active",
+      "title": "TEMU 商品机会研究"
+    },
+    {
+      "id": "DEC-TEMU-SEO-001",
+      "type": "knowledge",
+      "project": "temu",
+      "status": "active",
+      "title": "TEMU SEO 关键词研究"
+    }
+  ],
+  "cases": [
+    {
+      "id": "RB-01",
+      "name": "项目连续性",
+      "query": "昨天那个跨 Agent Memory 项目下一步做什么？",
+      "context": {
+        "project": "open-memory"
+      },
+      "expected_relevant_ids": [
+        "STATE-OPEN-MEMORY-RECALL-001"
+      ],
+      "allowed_ids": [
+        "PROJ-OPEN-MEMORY-001",
+        "DEC-OPEN-MEMORY-MARKDOWN-001",
+        "STATE-OPEN-MEMORY-RECALL-001"
+      ],
+      "forbidden_ids": [
+        "PROJ-TEMU-001",
+        "DEC-TEMU-SEO-001"
+      ],
+      "clean_result": {
+        "returned_ids": [
+          "STATE-OPEN-MEMORY-RECALL-001"
+        ],
+        "injected_ids": [
+          "STATE-OPEN-MEMORY-RECALL-001"
+        ]
+      },
+      "wrong_recall_probe": {
+        "returned_ids": [
+          "STATE-OPEN-MEMORY-RECALL-001",
+          "DEC-TEMU-SEO-001"
+        ],
+        "injected_ids": [
+          "STATE-OPEN-MEMORY-RECALL-001",
+          "DEC-TEMU-SEO-001"
+        ]
+      },
+      "pollution_probe": {
+        "returned_ids": [
+          "STATE-OPEN-MEMORY-RECALL-001",
+          "PROJ-TEMU-001"
+        ],
+        "injected_ids": [
+          "STATE-OPEN-MEMORY-RECALL-001",
+          "PROJ-TEMU-001"
+        ]
+      }
+    },
+    {
+      "id": "RB-02",
+      "name": "决策召回",
+      "query": "为什么 ShopMemo 一个 Project 只对应一个品牌？",
+      "context": {
+        "project": "shopmemo"
+      },
+      "expected_relevant_ids": [
+        "DEC-SHOPMEMO-BRAND-001"
+      ],
+      "allowed_ids": [
+        "DEC-SHOPMEMO-BRAND-001",
+        "STATE-SHOPMEMO-LAUNCH-001"
+      ],
+      "forbidden_ids": [
+        "PROJ-OPEN-MEMORY-001",
+        "DEC-OPEN-MEMORY-MARKDOWN-001"
+      ],
+      "clean_result": {
+        "returned_ids": [
+          "DEC-SHOPMEMO-BRAND-001"
+        ],
+        "injected_ids": [
+          "DEC-SHOPMEMO-BRAND-001"
+        ]
+      },
+      "wrong_recall_probe": {
+        "returned_ids": [
+          "DEC-SHOPMEMO-BRAND-001",
+          "PROJ-OPEN-MEMORY-001"
+        ],
+        "injected_ids": [
+          "DEC-SHOPMEMO-BRAND-001",
+          "PROJ-OPEN-MEMORY-001"
+        ]
+      },
+      "pollution_probe": {
+        "returned_ids": [
+          "DEC-SHOPMEMO-BRAND-001",
+          "PROJ-OPEN-MEMORY-001"
+        ],
+        "injected_ids": [
+          "DEC-SHOPMEMO-BRAND-001",
+          "PROJ-OPEN-MEMORY-001"
+        ]
+      }
+    },
+    {
+      "id": "RB-03",
+      "name": "状态更新",
+      "query": "ShopMemo 目前做到哪里了？",
+      "context": {
+        "project": "shopmemo"
+      },
+      "expected_relevant_ids": [
+        "STATE-SHOPMEMO-LAUNCH-001"
+      ],
+      "allowed_ids": [
+        "STATE-SHOPMEMO-LAUNCH-001",
+        "DEC-SHOPMEMO-BRAND-001"
+      ],
+      "forbidden_ids": [
+        "STATE-SHOPMEMO-DRAFT-001",
+        "PROJ-TEMU-001"
+      ],
+      "clean_result": {
+        "returned_ids": [
+          "STATE-SHOPMEMO-LAUNCH-001"
+        ],
+        "injected_ids": [
+          "STATE-SHOPMEMO-LAUNCH-001"
+        ]
+      },
+      "wrong_recall_probe": {
+        "returned_ids": [
+          "STATE-SHOPMEMO-LAUNCH-001",
+          "STATE-SHOPMEMO-DRAFT-001"
+        ],
+        "injected_ids": [
+          "STATE-SHOPMEMO-LAUNCH-001",
+          "STATE-SHOPMEMO-DRAFT-001"
+        ]
+      },
+      "pollution_probe": {
+        "returned_ids": [
+          "STATE-SHOPMEMO-LAUNCH-001",
+          "STATE-SHOPMEMO-DRAFT-001"
+        ],
+        "injected_ids": [
+          "STATE-SHOPMEMO-LAUNCH-001",
+          "STATE-SHOPMEMO-DRAFT-001"
+        ]
+      }
+    },
+    {
+      "id": "RB-04",
+      "name": "冲突记忆",
+      "query": "现在应该优先哪个市场？",
+      "context": {
+        "project": "shopmemo"
+      },
+      "expected_relevant_ids": [
+        "DEC-SHOPMEMO-CHINESE-001"
+      ],
+      "allowed_ids": [
+        "DEC-SHOPMEMO-CHINESE-001",
+        "STATE-SHOPMEMO-LAUNCH-001"
+      ],
+      "forbidden_ids": [
+        "DEC-SHOPMEMO-ENGLISH-001",
+        "PROJ-TEMU-001"
+      ],
+      "clean_result": {
+        "returned_ids": [
+          "DEC-SHOPMEMO-CHINESE-001"
+        ],
+        "injected_ids": [
+          "DEC-SHOPMEMO-CHINESE-001"
+        ]
+      },
+      "wrong_recall_probe": {
+        "returned_ids": [
+          "DEC-SHOPMEMO-CHINESE-001",
+          "DEC-SHOPMEMO-ENGLISH-001"
+        ],
+        "injected_ids": [
+          "DEC-SHOPMEMO-CHINESE-001",
+          "DEC-SHOPMEMO-ENGLISH-001"
+        ]
+      },
+      "pollution_probe": {
+        "returned_ids": [
+          "DEC-SHOPMEMO-CHINESE-001",
+          "DEC-SHOPMEMO-ENGLISH-001"
+        ],
+        "injected_ids": [
+          "DEC-SHOPMEMO-CHINESE-001",
+          "DEC-SHOPMEMO-ENGLISH-001"
+        ]
+      }
+    },
+    {
+      "id": "RB-05",
+      "name": "无关隔离与污染",
+      "query": "ShopMemo 当前产品下一步是什么？",
+      "context": {
+        "project": "shopmemo"
+      },
+      "expected_relevant_ids": [
+        "STATE-SHOPMEMO-LAUNCH-001"
+      ],
+      "allowed_ids": [
+        "STATE-SHOPMEMO-LAUNCH-001",
+        "DEC-SHOPMEMO-BRAND-001"
+      ],
+      "forbidden_ids": [
+        "PROJ-OPEN-MEMORY-001",
+        "DEC-OPEN-MEMORY-MARKDOWN-001",
+        "PROJ-TEMU-001",
+        "DEC-TEMU-SEO-001"
+      ],
+      "clean_result": {
+        "returned_ids": [
+          "STATE-SHOPMEMO-LAUNCH-001"
+        ],
+        "injected_ids": [
+          "STATE-SHOPMEMO-LAUNCH-001"
+        ]
+      },
+      "wrong_recall_probe": {
+        "returned_ids": [
+          "STATE-SHOPMEMO-LAUNCH-001",
+          "DEC-TEMU-SEO-001"
+        ],
+        "injected_ids": [
+          "STATE-SHOPMEMO-LAUNCH-001",
+          "DEC-TEMU-SEO-001"
+        ]
+      },
+      "pollution_probe": {
+        "returned_ids": [
+          "STATE-SHOPMEMO-LAUNCH-001",
+          "PROJ-OPEN-MEMORY-001"
+        ],
+        "injected_ids": [
+          "STATE-SHOPMEMO-LAUNCH-001",
+          "PROJ-OPEN-MEMORY-001"
+        ]
+      }
+    }
+  ]
+}

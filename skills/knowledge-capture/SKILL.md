@@ -35,6 +35,20 @@ Conversation → Extract → Evaluate → Classify → Inbox
 
 按资产职责归类：Project、Decision、Case、Method、Insight、Preference 或 Learning。先搜索已有文件；优先追加或更新已有资产，不按聊天创建文件。
 
+### Consolidate and Memory Gate
+
+评分达到阈值只表示候选值得进入 Gate，不表示应该 CREATE。先查找相同项目、相同 Decision、当前 State 和已有方法，再选择且只能选择一个动作：
+
+- `CREATE`：没有相同主题，形成新候选；
+- `UPDATE`：已有 State、Preference 或 Knowledge 的当前内容发生变化；
+- `MERGE`：多个条目表达同一知识，合并到一个正式落点；
+- `IGNORE`：闲聊、一次性上下文、重复或短期过期内容；
+- `SUPERSEDE`：新 Decision 明确替代旧 Decision，旧条目标记 `superseded`。
+
+每个提案必须记录 `action`、`target.existing_ids`、`target.path`、`gate_reason`、`evidence`、`base_commit` 和 `approval_status`。动作和字段按 `system/schemas/memory-proposal.schema.json` 验证；五个动作的 fixture 在 `evals/memory-gate-fixtures.json`。
+
+Memory Item 的 frontmatter 必须符合 `system/schemas/memory-item.schema.json`。`scope: inbox` 只能配 `status: pending`；正式资产不得把 pending 当作 active；`superseded` 必须带 `superseded_by`。
+
 ### Inbox
 
 使用 `inbox/YYYY-MM-DD-round-N.md`。每个提案必须包含来源、5 项评分、总分、建议分类、建议更新文件、提炼内容、证据边界和审核状态。
@@ -56,6 +70,8 @@ Conversation → Extract → Evaluate → Classify → Inbox
 ### Commit
 
 提交前检查 Markdown 链接、敏感信息、`chat-*.md` 禁止项和 `git diff --check`。默认只写本地文件；只有启用本地 Git 时才 commit，只有用户明确启用 GitHub 并授权时才 push；禁止强制推送。
+
+T1 不实现 SQLite、FTS5、embedding 或后台服务；本阶段只验证 schema、Gate 行为和 Recall fixture。
 
 ## Safety rules
 

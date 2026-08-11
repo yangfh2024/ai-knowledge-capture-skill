@@ -1,4 +1,5 @@
 protocol_version: "0.1"
+schema_version: "0.2-draft"
 
 knowledge_base:
   root: ""
@@ -32,3 +33,13 @@ paths:
   inbox: inbox/
   receipts: receipts/
   review_queue: system/review-queue.md
+  memory_item_schema: system/schemas/memory-item.schema.json
+  memory_proposal_schema: system/schemas/memory-proposal.schema.json
+  recall_benchmark_schema: system/schemas/recall-benchmark.schema.json
+
+recall_quality:
+  metrics:
+    - recall_hit
+    - wrong_recall
+    - context_pollution
+  pollution_is_hard_failure: true

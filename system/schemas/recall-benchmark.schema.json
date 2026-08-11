@@ -1,0 +1,252 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/yangfh2024/ai-knowledge-capture-skill/schema/recall-benchmark.schema.json",
+  "title": "Recall Benchmark Fixture",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "benchmark_version",
+    "metrics",
+    "memory_catalog",
+    "cases"
+  ],
+  "properties": {
+    "benchmark_version": {
+      "type": "string",
+      "const": "0.2"
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recall_hit",
+        "wrong_recall",
+        "context_pollution"
+      ],
+      "properties": {
+        "recall_hit": {
+          "type": "object",
+          "required": [
+            "definition",
+            "target"
+          ],
+          "properties": {
+            "definition": {
+              "type": "string"
+            },
+            "target": {
+              "const": "all_required_ids_returned"
+            }
+          }
+        },
+        "wrong_recall": {
+          "type": "object",
+          "required": [
+            "definition",
+            "target"
+          ],
+          "properties": {
+            "definition": {
+              "type": "string"
+            },
+            "target": {
+              "const": "zero_disallowed_ids"
+            }
+          }
+        },
+        "context_pollution": {
+          "type": "object",
+          "required": [
+            "definition",
+            "target"
+          ],
+          "properties": {
+            "definition": {
+              "type": "string"
+            },
+            "target": {
+              "const": "zero_forbidden_or_inactive_injected"
+            }
+          }
+        }
+      }
+    },
+    "memory_catalog": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "type",
+          "project",
+          "status",
+          "title"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_-]{2,63}$"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "profile",
+              "preference",
+              "project",
+              "state",
+              "decision",
+              "knowledge",
+              "case"
+            ]
+          },
+          "project": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "pending",
+              "superseded",
+              "rejected",
+              "archived"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "query",
+          "context",
+          "expected_relevant_ids",
+          "allowed_ids",
+          "forbidden_ids",
+          "clean_result",
+          "wrong_recall_probe",
+          "pollution_probe"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^RB-[0-9]{2}$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "query": {
+            "type": "string",
+            "minLength": 1
+          },
+          "context": {
+            "type": "object"
+          },
+          "expected_relevant_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "allowed_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "forbidden_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "clean_result": {
+            "type": "object",
+            "required": [
+              "returned_ids",
+              "injected_ids"
+            ],
+            "properties": {
+              "returned_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "injected_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "wrong_recall_probe": {
+            "type": "object",
+            "required": [
+              "returned_ids",
+              "injected_ids"
+            ],
+            "properties": {
+              "returned_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "injected_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "pollution_probe": {
+            "type": "object",
+            "required": [
+              "returned_ids",
+              "injected_ids"
+            ],
+            "properties": {
+              "returned_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "injected_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

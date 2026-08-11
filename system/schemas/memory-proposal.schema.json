@@ -1,0 +1,288 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/yangfh2024/ai-knowledge-capture-skill/schema/memory-proposal.schema.json",
+  "title": "Memory Gate Proposal",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "proposal_id",
+    "action",
+    "candidate",
+    "target",
+    "gate_reason",
+    "evidence",
+    "base_commit",
+    "approval_status"
+  ],
+  "properties": {
+    "proposal_id": {
+      "type": "string",
+      "pattern": "^PROP-[A-Z0-9_-]{3,63}$"
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "CREATE",
+        "UPDATE",
+        "MERGE",
+        "IGNORE",
+        "SUPERSEDE"
+      ]
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "title",
+        "content",
+        "source",
+        "project",
+        "tags",
+        "importance",
+        "confidence",
+        "status"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "profile",
+            "preference",
+            "project",
+            "state",
+            "decision",
+            "knowledge",
+            "case"
+          ]
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "content": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "project": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "importance": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "status": {
+          "const": "pending"
+        }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "existing_ids"
+      ],
+      "properties": {
+        "path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "existing_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_-]{2,63}$"
+          },
+          "uniqueItems": true
+        },
+        "superseded_by": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[A-Z][A-Z0-9_-]{2,63}$"
+        }
+      }
+    },
+    "gate_reason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence": {
+      "type": "string",
+      "enum": [
+        "verified",
+        "uncertain",
+        "insufficient",
+        "not_applicable"
+      ]
+    },
+    "base_commit": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{7,64}$"
+    },
+    "approval_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected",
+        "changes_requested"
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "action": {
+            "const": "CREATE"
+          }
+        },
+        "required": [
+          "action"
+        ]
+      },
+      "then": {
+        "properties": {
+          "target": {
+            "properties": {
+              "existing_ids": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "action": {
+            "const": "UPDATE"
+          }
+        },
+        "required": [
+          "action"
+        ]
+      },
+      "then": {
+        "properties": {
+          "target": {
+            "properties": {
+              "existing_ids": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "action": {
+            "const": "MERGE"
+          }
+        },
+        "required": [
+          "action"
+        ]
+      },
+      "then": {
+        "properties": {
+          "target": {
+            "properties": {
+              "existing_ids": {
+                "minItems": 2
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "action": {
+            "const": "IGNORE"
+          }
+        },
+        "required": [
+          "action"
+        ]
+      },
+      "then": {
+        "properties": {
+          "target": {
+            "properties": {
+              "path": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "action": {
+            "const": "SUPERSEDE"
+          }
+        },
+        "required": [
+          "action"
+        ]
+      },
+      "then": {
+        "properties": {
+          "candidate": {
+            "properties": {
+              "type": {
+                "const": "decision"
+              }
+            }
+          },
+          "target": {
+            "properties": {
+              "existing_ids": {
+                "minItems": 1
+              },
+              "superseded_by": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

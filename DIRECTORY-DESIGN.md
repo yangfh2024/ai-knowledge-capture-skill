@@ -21,7 +21,11 @@ knowledge-base/
     ├── rules.md
     ├── templates.md
     ├── sync-state.md
-    └── config.yaml
+    ├── config.yaml
+    └── schemas/
+        ├── memory-item.schema.json
+        ├── memory-proposal.schema.json
+        └── recall-benchmark.schema.json
 ```
 
 `config.yaml` 是可选适配器配置，不承载知识；第一版也可以完全不使用它。所有长期知识、审核记录和 Receipt 都使用 Markdown。
@@ -34,6 +38,7 @@ knowledge-base/
 - 方法使用 `METHOD-YYYYMMDD-NNN`；
 - 洞察使用 `INSIGHT-YYYYMMDD-NNN`；
 - Inbox 使用批次文件，不使用聊天 ID 文件。
+- Schema 和 Benchmark fixture 属于协议元数据，不是用户知识资产；它们可以被机器验证，但不能替代 Markdown 事实源。
 
 ## 更新原则
 

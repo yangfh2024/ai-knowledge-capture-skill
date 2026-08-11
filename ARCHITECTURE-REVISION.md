@@ -283,7 +283,15 @@ V1 最小实现优先 search、recall、inspect、status、rebuild-index。每�
 4. 冲突记忆：新决策出现后，返回新决策并标记旧决策 superseded；
 5. 无关隔离：查询 ShopMemo 时不注入 TEMU、SEO、OpenClaw 等无关内容。
 
-V1 成功标准：A Agent 写入一条经确认的 Memory，B Agent 在新会话中无需用户重复解释即可召回；同时返回路径、分数和来源。
+每个案例同时计算三项指标：
+
+- `Recall hit`：是否返回全部 `expected_relevant_ids`；
+- `Wrong recall`：是否返回不在 `allowed_ids` 中的记忆；目标为 0；
+- `Context pollution`：是否把 `forbidden_ids`、`superseded` 或 `pending` 记忆注入上下文；目标为 0。
+
+Context pollution 是硬失败，不因为关键词相关性高而豁免。例如 ShopMemo 查询命中 OpenMemory 的“memory”关键词，只要 OpenMemory 在该案例的 forbidden 集合中，就算一次污染。Benchmark fixture 和机器 schema 分别位于 `evals/recall-benchmark.json` 与 `system/schemas/recall-benchmark.schema.json`。
+
+V1 成功标准：A Agent 写入一条经确认的 Memory，B Agent 在新会话中无需用户重复解释即可召回；同时满足 Recall hit、Wrong recall=0、Context pollution=0，并返回路径、分数和来源。
 
 ## 13. V1 实施范围
 

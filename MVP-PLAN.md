@@ -41,6 +41,8 @@
 
 - [ ] 实现 `memory search`、`memory recall`、`memory inspect`、`memory status`；
 - [ ] 为项目连续性、决策召回、状态更新、冲突记忆、无关隔离建立回归测试；
+- [ ] 每个 Benchmark 同时报告 Recall hit、Wrong recall、Context pollution；
+- [ ] 任何 forbidden、superseded 或 pending 记忆被注入，都判定 Context pollution 失败；
 - [ ] 记录 Recall 结果和失败原因，不保存聊天全文；
 - [ ] 以“B Agent 无需用户重复解释即可继续工作”为 V1 验收标准。
 

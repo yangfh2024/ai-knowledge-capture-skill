@@ -49,6 +49,16 @@ Context Loaded
 
 若没有相关知识，明确输出 `No relevant context found`，不要编造用户背景。
 
+## Recall quality guard
+
+召回不只检查是否命中，还必须防止错误注入：
+
+- Recall hit：返回全部 required memory IDs；
+- Wrong recall：不返回 allowed IDs 之外的记忆；
+- Context pollution：不注入 forbidden、superseded 或 pending 记忆。
+
+即使 OpenMemory 等其他项目与当前查询共享“memory”关键词，只要当前任务是 ShopMemo 且该项目在 forbidden 集合中，也必须判定为 context pollution。实现或测试时使用 `evals/recall-benchmark.json`，不要只统计命中率。
+
 ## Invocation modes
 
 - 自动加载：Agent 启动任务时按上述顺序读取；

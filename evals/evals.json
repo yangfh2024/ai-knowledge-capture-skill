@@ -15,6 +15,27 @@
       "id": 3,
       "name": "receipt-after-approval",
       "prompt": "用户批准一个提案。更新正式资产，生成 Knowledge Receipt，并返回 Git 提交和文件变化。"
+    },
+    {
+      "id": 4,
+      "name": "memory-gate-actions",
+      "prompt": "给出一组候选记忆，分别判断 CREATE、UPDATE、MERGE、IGNORE、SUPERSEDE，并说明目标文件、旧记忆 ID、证据边界和生命周期状态。",
+      "expected_output": "五个动作各出现一次，输出符合 memory-proposal.schema.json。",
+      "files": ["system/schemas/memory-proposal.schema.json", "evals/memory-gate-fixtures.json"]
+    },
+    {
+      "id": 5,
+      "name": "recall-pollution-guard",
+      "prompt": "查询 ShopMemo 的当前状态和历史决策。召回结果必须命中相关记忆，同时不能注入 OpenMemory、TEMU、superseded 或 pending 内容，并报告 Recall hit、Wrong recall、Context pollution。",
+      "expected_output": "Recall hit 成功，Wrong recall=0，Context pollution=0；污染探针必须被判定失败。",
+      "files": ["system/schemas/recall-benchmark.schema.json", "evals/recall-benchmark.json"]
+    },
+    {
+      "id": 6,
+      "name": "memory-lifecycle-schema",
+      "prompt": "验证 Memory Item frontmatter：formal active、inbox pending、formal superseded 三种状态必须通过；formal pending、缺少 superseded_by 的 superseded、带 superseded_by 的 active 必须失败。",
+      "expected_output": "生命周期规则可以机器验证，并拒绝三种非法组合。",
+      "files": ["system/schemas/memory-item.schema.json", "templates/memory-item.md", "scripts/validate_t1.py"]
     }
   ]
 }
