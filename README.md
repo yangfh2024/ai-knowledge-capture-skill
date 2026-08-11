@@ -165,7 +165,7 @@ Cursor：Context Loaded；已知路由必须保持拆分，不需要重新解释
 
 ## Agent 安装入口
 
-本机的全局触发入口是 `C:\Users\FITS-PC\.agents\skills\ai-knowledge-capture\SKILL.md`。它只负责定位本项目中的两个规范 Skill，不复制协议内容；迁移到其他机器时，将本项目目录和这个入口按同样方式安装即可。
+本仓库不绑定某台机器的全局入口。请按照 [安装与快速设置](SETUP.md) 将两个 `SKILL.md` 安装到当前 Agent 的原生 Skill 目录，再单独设置知识库根目录。
 
 ## License
 
