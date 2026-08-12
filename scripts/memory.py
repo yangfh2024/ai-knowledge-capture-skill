@@ -29,6 +29,15 @@ TOKEN_RE = re.compile(r"[A-Za-z0-9_]+|[\u4e00-\u9fff]+", re.UNICODE)
 EXCLUDED_DIRS = {".git", ".memory", "archive"}
 
 
+def user_config_path() -> Path:
+    """Return a per-user config path; never store this machine path in Git."""
+    if os.name == "nt":
+        base = os.environ.get("APPDATA") or str(Path.home() / "AppData" / "Roaming")
+    else:
+        base = os.environ.get("XDG_CONFIG_HOME") or str(Path.home() / ".config")
+    return Path(base) / "ai-knowledge-capture" / "config.json"
+
+
 class MemoryError(Exception):
     pass
 
@@ -376,13 +385,45 @@ def context_builder(results: list[dict[str, Any]], token_budget: int = 2400) -> 
 def resolve_root(value: str | None) -> Path:
     candidate = value or os.environ.get("MEMORY_KB_ROOT")
     if not candidate:
-        fail("Knowledge Base not configured; pass --root or set MEMORY_KB_ROOT")
+        config_path = user_config_path()
+        if config_path.exists():
+            try:
+                candidate = json.loads(config_path.read_text(encoding="utf-8")).get("root")
+            except (OSError, json.JSONDecodeError) as exc:
+                fail(f"Cannot read local setup config {config_path}: {exc}")
+    if not candidate:
+        fail("首次使用：请让 Agent 询问你的知识库目录，然后运行 memory setup <目录>")
     root = Path(candidate).expanduser().resolve()
     if not root.exists():
         fail(f"Knowledge Base does not exist: {root}")
     if not os.access(root, os.R_OK):
         fail(f"Knowledge Base is not readable: {root}")
     return root
+
+
+def command_setup(root_value: str) -> dict[str, Any]:
+    root = Path(root_value).expanduser().resolve()
+    if not root.exists():
+        try:
+            root.mkdir(parents=True, exist_ok=True)
+        except OSError as exc:
+            fail(f"Cannot create Knowledge Base directory {root}: {exc}")
+    if not os.access(root, os.R_OK):
+        fail(f"Knowledge Base directory is not readable: {root}")
+    if not os.access(root, os.W_OK):
+        fail(f"Knowledge Base directory is not writable: {root}")
+    config_path = user_config_path()
+    config_path.parent.mkdir(parents=True, exist_ok=True)
+    config_path.write_text(json.dumps({"root": str(root), "schema_version": SCHEMA_VERSION}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    result = command_init(root)
+    return {
+        "status": "ready",
+        "message": "知识库已准备完成",
+        "root": str(root),
+        "config": str(config_path),
+        "index": result,
+        "next": "以后直接用自然语言让 Agent 查询或沉淀知识。",
+    }
 
 
 def command_init(root: Path) -> dict[str, Any]:
@@ -577,6 +618,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--root", help="Knowledge Base root; or use MEMORY_KB_ROOT")
     parser.add_argument("--json", action="store_true", help="emit JSON")
     sub = parser.add_subparsers(dest="command", required=True)
+    setup = sub.add_parser("setup", help="首次设置知识库并自动初始化")
+    setup.add_argument("root")
     sub.add_parser("init")
     sub.add_parser("rebuild-index")
     search = sub.add_parser("search")
@@ -608,7 +651,10 @@ def main(argv: list[str] | None = None) -> int:
     merge.add_argument("target_id")
 
     args = parser.parse_args(argv)
-    root = resolve_root(args.root)
+    if args.command == "setup":
+        result = command_setup(args.root)
+    else:
+        root = resolve_root(args.root)
     if args.command in {"init", "rebuild-index"}:
         result = command_init(root) if args.command == "init" else rebuild_index(root)
     elif args.command == "search":
@@ -636,9 +682,9 @@ def main(argv: list[str] | None = None) -> int:
         result = command_supersede(root, args.old_id, args.new_id)
     elif args.command == "merge":
         result = command_merge(root, args.source_id, args.target_id)
-    else:
+    elif args.command != "setup":
         fail(f"Unsupported command: {args.command}")
-    if args.json or args.command in {"init", "rebuild-index", "search", "recall", "inspect", "status", "doctor", "benchmark", "debug", "update-state", "supersede", "merge"}:
+    if args.json or args.command in {"setup", "init", "rebuild-index", "search", "recall", "inspect", "status", "doctor", "benchmark", "debug", "update-state", "supersede", "merge"}:
         print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0
 

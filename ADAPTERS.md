@@ -10,6 +10,18 @@
 4. 会话结束时把候选交给 \`knowledge-capture\` / Inbox；
 5. 返回 \`source_commit\`、命中原因和保存状态。
 
+## First-run onboarding
+
+Adapter 发现本机没有 Knowledge Base 配置时，不要求普通用户输入 Python 参数。只询问一次：
+
+> 你的知识库要保存在哪个文件夹？例如 `D:\AI\追风宇宙`。
+
+用户确认后执行：
+
+    python scripts/memory.py setup "<用户确认的目录>"
+
+该命令会创建目录（如不存在）、保存每用户配置、初始化索引并完成健康检查。成功后向用户显示“知识库已准备完成”。
+
 ## Codex adapter
 
 目录：\`adapters/codex/adapter.md\`
@@ -53,4 +65,3 @@ Adapter 交接最少返回：
 - FTS5 不可用：\`memory doctor\` 报告失败，Adapter 不伪造召回；
 - 没有相关 active 记忆：输出 \`No relevant context found\`；
 - Inbox/pending/superseded：只能标为候选或历史，不能当作 active 事实。
-

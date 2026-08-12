@@ -19,6 +19,14 @@ Conversation → Extract → Evaluate → Classify → Inbox
 
 读取当前范围内的对话或文件，提取结论、决策、方法、案例、洞察和下一步。只保存提炼结果；不要保存逐字稿。
 
+### First-run onboarding
+
+如果没有配置 Knowledge Base 根目录，不要让普通用户执行 Python、SQLite 或 `--root` 命令。只询问：
+
+> 你的知识库要保存在哪个文件夹？例如 `D:\AI\追风宇宙`。
+
+用户给出路径后，自动调用 `memory setup <目录>`，完成目录检查/创建、索引初始化和健康检查，再继续 Capture。路径必须来自用户，不能猜测或扫描磁盘。
+
 ### Evaluate
 
 读取 `system/config.yaml` 的评分配置；若配置缺失，使用 5 个维度、每项 0–2、总分 10：

@@ -51,6 +51,8 @@ Agent: 你昨天决定构建一个 Agent-agnostic memory layer，
 
 没有设置根目录时，Skill 必须停止并提示设置，不能扫描磁盘或猜测路径。
 
+安装完成后，普通用户不需要执行 Python 命令。第一次使用时 Agent 会询问知识库文件夹，用户确认后自动创建/初始化并提示“知识库已准备完成”。
+
 ## Skill 项目层级
 
 ```text
@@ -202,7 +204,7 @@ Cursor：Context Loaded；已知路由必须保持拆分，不需要重新解释
 
 ## 当前实现状态
 
-这是一个本地 Markdown 协议原型，已实现可重建 SQLite FTS5 索引、`memory search`、`memory recall`、Context Builder、Recall Benchmark、Codex/Claude Code Adapter 契约，以及 UPDATE/MERGE/SUPERSEDE 生命周期命令。Markdown 仍是事实源；本地 Git 和 GitHub 同步都是可选层。
+这是一个本地 Markdown 协议原型，已实现一键初始化、可重建 SQLite FTS5 索引、`memory search`、`memory recall`、Context Builder、Recall Benchmark、Codex/Claude Code Adapter 契约，以及 UPDATE/MERGE/SUPERSEDE 生命周期命令。Markdown 仍是事实源；本地 Git 和 GitHub 同步都是可选层。
 
 ## Agent 安装入口
 

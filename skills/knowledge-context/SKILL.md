@@ -17,7 +17,7 @@ User Task → Analyze Context → Retrieve Relevant Knowledge
 
 ## Retrieval order
 
-1. 读取安装级配置发现 Knowledge Base 根目录；未设置时输出 `Knowledge Base not configured` 并停止；
+1. 读取安装级配置发现 Knowledge Base 根目录；未设置时向用户询问一次目录，不猜测路径，然后调用 `memory setup <目录>` 完成配置、索引初始化和健康检查；
 2. 检查根目录可读、可写，再读取协议版本和 `system/config.yaml`；
 3. 读取 `README.md`、`profile.md`、`preferences.md`；
 4. 根据任务匹配项目和 `current-status.md`；
@@ -71,7 +71,7 @@ Context Loaded
 
 ## Adapter behavior
 
-如果无法发现 Knowledge Base 根目录，直接报告失败并请求路径；不要创建新的默认知识库。注入上下文时只返回与任务相关的最小文件集合，并公开 `source_commit`。
+如果无法发现 Knowledge Base 根目录，先请求用户提供目录；用户确认后自动创建目录（如不存在）、初始化索引并继续任务。不要创建未经用户确认的默认知识库。注入上下文时只返回与任务相关的最小文件集合，并公开 `source_commit`。
 
 ## Safety
 

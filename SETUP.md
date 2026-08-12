@@ -20,9 +20,15 @@ Agent Skills 目前有一个跨工具的开放格式：每个 Skill 是一个目
 
 不同 Agent 的目录可能不同。目录不确定时，Agent 必须查询当前 Agent 文档或使用其 Skill 管理入口，不应猜测路径。
 
-## 2. Set the Knowledge Base root
+## 2. Set the Knowledge Base root (one-click onboarding)
 
-首次运行执行：
+普通用户不需要执行命令。安装完成后，Agent 首次触发 Knowledge Context 或 Knowledge Capture 时会询问：
+
+> 你的知识库要保存在哪个文件夹？例如 `D:\AI\追风宇宙`。
+
+用户确认路径后，Agent 自动执行 setup、创建目录（如不存在）、初始化索引和健康检查。
+
+高级用户也可以手动执行：
 
 ```text
 /memory setup <knowledge-base-path>
@@ -34,7 +40,7 @@ Agent Skills 目前有一个跨工具的开放格式：每个 Skill 是一个目
 /memory setup D:\AI\追风宇宙
 ```
 
-设置器必须：
+设置器会自动：
 
 1. 保存安装级配置，不把机器私有路径提交到公共仓库；
 2. 检查根目录存在；
@@ -42,7 +48,7 @@ Agent Skills 目前有一个跨工具的开放格式：每个 Skill 是一个目
 4. 检查写入权限；
 5. 返回 `Knowledge Base Configured` 和实际路径。
 
-任何检查失败都要停止并说明具体原因。没有根目录时，不扫描整台机器，也不自动创建第二个知识库。
+任何检查失败都要停止并说明具体原因。没有根目录时，不扫描整台机器，也不自动创建未经用户确认的第二个知识库。
 
 ## 3. Choose storage
 
@@ -98,3 +104,11 @@ python scripts/memory.py --root <knowledge-base> supersede <old-decision-id> <ne
 ```
 
 每次修改后应重新执行 `rebuild-index`，并通过 Git 审查 Markdown diff。`pending` 和 `superseded` 记忆不会被 `recall` 注入。
+
+### One-click command for Agent adapters
+
+Agent 只需执行一次：
+
+    python scripts/memory.py setup "D:\AI\追风宇宙"
+
+成功后返回“知识库已准备完成”。以后普通用户可以只用自然语言查询和沉淀知识；CLI 仅供高级用户诊断。
