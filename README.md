@@ -187,6 +187,7 @@ Cursor：Context Loaded；已知路由必须保持拆分，不需要重新解释
 - [Skill 协议](SKILL-SPEC.md)
 - [目录设计](DIRECTORY-DESIGN.md)
 - [使用流程](USAGE.md)
+- [完整使用指南](USAGE.md)
 - [安装与快速设置](SETUP.md)
 - [跨 Agent Demo](DEMO.md)
 - [MVP 计划](MVP-PLAN.md)
