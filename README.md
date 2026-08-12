@@ -196,11 +196,12 @@ Cursor：Context Loaded；已知路由必须保持拆分，不需要重新解释
 - [Memory Item Schema](system/schemas/memory-item.schema.json)
 - [Memory Gate Schema](system/schemas/memory-proposal.schema.json)
 - [Recall Benchmark](evals/recall-benchmark.json)
+- [Agent Adapter Contract](ADAPTERS.md)
 - [Knowledge Receipt 模板](templates/knowledge-receipt.md)
 
 ## 当前实现状态
 
-这是一个本地 Markdown 协议原型，已经在“追风宇宙”知识库中验证了 Inbox、人工晋升、索引和 Receipt 的工作方式。本地 Git 和 GitHub 同步都是可选层；任何 Agent 都可以按协议读取和写入同一个 Knowledge Base。
+这是一个本地 Markdown 协议原型，已实现可重建 SQLite FTS5 索引、`memory search`、`memory recall`、Context Builder、Recall Benchmark、Codex/Claude Code Adapter 契约，以及 UPDATE/MERGE/SUPERSEDE 生命周期命令。Markdown 仍是事实源；本地 Git 和 GitHub 同步都是可选层。
 
 ## Agent 安装入口
 

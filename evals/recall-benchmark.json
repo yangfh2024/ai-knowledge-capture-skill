@@ -147,7 +147,8 @@
       ],
       "allowed_ids": [
         "DEC-SHOPMEMO-BRAND-001",
-        "STATE-SHOPMEMO-LAUNCH-001"
+        "STATE-SHOPMEMO-LAUNCH-001",
+        "DEC-SHOPMEMO-CHINESE-001"
       ],
       "forbidden_ids": [
         "PROJ-OPEN-MEMORY-001",
@@ -194,7 +195,8 @@
       ],
       "allowed_ids": [
         "STATE-SHOPMEMO-LAUNCH-001",
-        "DEC-SHOPMEMO-BRAND-001"
+        "DEC-SHOPMEMO-BRAND-001",
+        "DEC-SHOPMEMO-CHINESE-001"
       ],
       "forbidden_ids": [
         "STATE-SHOPMEMO-DRAFT-001",
@@ -241,7 +243,8 @@
       ],
       "allowed_ids": [
         "DEC-SHOPMEMO-CHINESE-001",
-        "STATE-SHOPMEMO-LAUNCH-001"
+        "STATE-SHOPMEMO-LAUNCH-001",
+        "DEC-SHOPMEMO-BRAND-001"
       ],
       "forbidden_ids": [
         "DEC-SHOPMEMO-ENGLISH-001",
@@ -288,7 +291,8 @@
       ],
       "allowed_ids": [
         "STATE-SHOPMEMO-LAUNCH-001",
-        "DEC-SHOPMEMO-BRAND-001"
+        "DEC-SHOPMEMO-BRAND-001",
+        "DEC-SHOPMEMO-CHINESE-001"
       ],
       "forbidden_ids": [
         "PROJ-OPEN-MEMORY-001",

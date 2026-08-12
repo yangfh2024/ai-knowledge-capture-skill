@@ -115,6 +115,13 @@
         "null"
       ],
       "pattern": "^[A-Z][A-Z0-9_-]{2,63}$"
+    },
+    "merged_into": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[A-Z][A-Z0-9_-]{2,63}$"
     }
   },
   "allOf": [

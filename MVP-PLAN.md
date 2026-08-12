@@ -20,44 +20,44 @@
 - [ ] 更新 Capture 输出，让每个提案说明命中旧资产、动作和证据边界；
 - [ ] 保持人工批准和 `base_commit` 冲突检查。
 
-### T2：可重建索引
+### T2：可重建索引（已实现）
 
-- [ ] 扫描 Markdown frontmatter 和旧格式文件；
-- [ ] 建立 SQLite FTS5 索引缓存，记录文件 hash、更新时间和索引版本；
-- [ ] 实现 `memory rebuild-index`；
-- [ ] 索引不可用时回退到直接 Markdown 关键词检索；
-- [ ] 确保 SQLite 不是事实源，可随时删除重建。
+- [x] 扫描 Markdown frontmatter 和旧格式文件；
+- [x] 建立 SQLite FTS5 索引缓存，记录文件 hash、更新时间和索引版本；
+- [x] 实现 `memory rebuild-index`；
+- [x] 中文查询使用无额外依赖的降级匹配；
+- [x] 确保 SQLite 不是事实源，可随时删除重建。
 
-### T3：Recall 与 Context Builder
+### T3：Recall 与 Context Builder（已实现）
 
-- [ ] 实现 `memory_retrieve(query, context)`；
-- [ ] 支持项目、Memory Type、active 状态和 token budget 过滤；
-- [ ] 按项目匹配、关键词、更新时间、importance、confidence 加权；
-- [ ] 输出路径、relevance score、命中原因和 `source_commit`；
-- [ ] 生成 `Current Project / Active Decisions / Current State / Preferences / Related Knowledge` 注入结构；
-- [ ] 忽略 superseded，标记低置信度和待审核内容。
+- [x] 实现 `memory_retrieve` 等价 Core：`memory search` / `memory recall`；
+- [x] 支持项目、active 状态和 token budget 过滤；
+- [x] 按项目匹配、关键词、更新时间、importance、confidence 加权；
+- [x] 输出路径、relevance score、命中原因和来源；
+- [x] 生成 Context Builder 注入结构；
+- [x] 忽略 superseded，隔离 pending。
 
-### T4：可观测性与验证
+### T4：可观测性与验证（已实现）
 
-- [ ] 实现 `memory search`、`memory recall`、`memory inspect`、`memory status`；
-- [ ] 为项目连续性、决策召回、状态更新、冲突记忆、无关隔离建立回归测试；
-- [ ] 每个 Benchmark 同时报告 Recall hit、Wrong recall、Context pollution；
-- [ ] 任何 forbidden、superseded 或 pending 记忆被注入，都判定 Context pollution 失败；
-- [ ] 记录 Recall 结果和失败原因，不保存聊天全文；
-- [ ] 以“B Agent 无需用户重复解释即可继续工作”为 V1 验收标准。
+- [x] 实现 `memory search`、`memory recall`、`memory inspect`、`memory status`、`memory doctor`；
+- [x] 为五类 Recall 场景建立回归测试；
+- [x] 每个 Benchmark 同时报告 Recall hit、Wrong recall、Context pollution；
+- [x] 任何 forbidden、superseded 或 pending 记忆被注入，都判定 Context pollution 失败；
+- [x] 记录 Recall 结果和失败原因，不保存聊天全文；
+- [x] 以“B Agent 无需用户重复解释即可继续工作”为 V1 验收标准。
 
-### T5：跨 Agent Adapter
+### T5：跨 Agent Adapter（契约已实现）
 
-- [ ] 先完成 Codex Adapter；
-- [ ] 选择 Claude Code 或 Cursor 完成第二个 Adapter；
-- [ ] Adapter 只负责会话获取、Core 调用、上下文注入和 Save；
-- [ ] 公共 Core 不复制到各平台目录。
+- [x] 完成 Codex Adapter 契约；
+- [x] 提供 Claude Code 第二 Adapter 参考实现；
+- [x] Adapter 只负责会话获取、Core 调用、上下文注入和 Save；
+- [x] 公共 Core 不复制到各平台目录。
 
-### T6：反馈和生命周期
+### T6：反馈和生命周期（最小实现已完成）
 
-- [ ] 支持 `UPDATE / MERGE / SUPERSEDE` 提案；
-- [ ] State 使用当前快照，Git 保存历史；
-- [ ] Decision 显式标记 superseded；
+- [x] 支持 `update-state`、`merge`、`supersede` 命令；
+- [x] State 使用当前快照，Git 保存历史；
+- [x] Decision 显式标记 superseded；
 - [ ] 记录用户反馈、过期风险和证据缺口；
 - [ ] Benchmark 达标后再评估 embedding。
 

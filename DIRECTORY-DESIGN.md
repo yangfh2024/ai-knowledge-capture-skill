@@ -26,6 +26,13 @@ knowledge-base/
         ├── memory-item.schema.json
         ├── memory-proposal.schema.json
         └── recall-benchmark.schema.json
+
+运行时索引（可删除重建，不是知识资产）：
+
+```text
+.memory/
+└── index.sqlite3
+```
 ```
 
 `config.yaml` 是可选适配器配置，不承载知识；第一版也可以完全不使用它。所有长期知识、审核记录和 Receipt 都使用 Markdown。

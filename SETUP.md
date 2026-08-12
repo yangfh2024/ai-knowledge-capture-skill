@@ -75,3 +75,26 @@ storage:
 ```
 
 如果当前 Agent 不支持斜杠命令，直接要求它读取对应的 `SKILL.md` 并按协议执行。
+
+## 5. Local Memory Core (T2-T6)
+
+在仓库目录执行：
+
+```text
+python scripts/memory.py --root <knowledge-base> init
+python scripts/memory.py --root <knowledge-base> doctor
+python scripts/memory.py --root <knowledge-base> search "ShopMemo"
+python scripts/memory.py --root <knowledge-base> recall "当前项目下一步" --project shopmemo
+```
+
+`init` 会扫描 Markdown 并创建可重建的 `.memory/index.sqlite3`。该 SQLite 文件只是缓存，不应作为知识库事实源提交到公共仓库；Markdown 仍是唯一事实源。
+
+生命周期命令：
+
+```text
+python scripts/memory.py --root <knowledge-base> update-state <state-id> --body-file <new-status.md>
+python scripts/memory.py --root <knowledge-base> merge <source-id> <target-id>
+python scripts/memory.py --root <knowledge-base> supersede <old-decision-id> <new-decision-id>
+```
+
+每次修改后应重新执行 `rebuild-index`，并通过 Git 审查 Markdown diff。`pending` 和 `superseded` 记忆不会被 `recall` 注入。
